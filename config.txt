@@ -1,0 +1,2 @@
+git config --global user.name "Nicolas"
+git config --global user.email "ntrujilloc@ucentral.edu.co"
