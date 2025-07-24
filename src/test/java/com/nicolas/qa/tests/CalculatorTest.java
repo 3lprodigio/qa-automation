@@ -1,4 +1,4 @@
-package com.nicolas.qa;
+package com.nicolas.qa.tests;
 
 import com.nicolas.qa.Calculator;
 import static org.junit.jupiter.api.Assertions.*;
