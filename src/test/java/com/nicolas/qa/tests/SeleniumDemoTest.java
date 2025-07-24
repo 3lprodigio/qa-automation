@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.security.Key;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -19,7 +21,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SeleniumDemoTest {
-    
+
     @Test
     public void abrirPagina(){
         System.setProperty("webdriver.edge.driver","C:\\WebDriver\\msedgedriver.exe");
@@ -47,5 +49,28 @@ public class SeleniumDemoTest {
         driver.quit();
     }
 
+    
+    @ParameterizedTest
+    @CsvSource({
+        "usuario_invalido1, clave_invalida1",
+        "usuario_invalido2, clave_invalida2",
+        "locked_out_user, secret_sauce"
+    })
+    public void wrongLogin(String username, String password){
+        System.setProperty("webdriver.edge.driver", "C:\\WebDriver\\msedgedriver.exe");
+        WebDriver driver = new EdgeDriver();
+
+        driver.get("https://www.saucedemo.com");
+        
+        driver.findElement(By.id("user-name")).sendKeys(username);
+        driver.findElement(By.id("password")).sendKeys(password);
+        driver.findElement(By.id("login-button")).click();
+
+        WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(2)).until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h3[data-test='error']")));
+        
+        assertTrue(errorMessage.getText().toLowerCase().contains("username and password"));
+
+        driver.quit();
+    }
 }
 
