@@ -23,6 +23,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.nicolas.qa.pages.InventoryPage;
 import com.nicolas.qa.pages.LoginPage;
+import com.nicolas.qa.pages.WrongLogin;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -39,7 +40,7 @@ public class SeleniumDemoTest {
     public void inventoryPageTest(){
 
         LoginPage loginP = new LoginPage(driver);
-        InventoryPage inventoryP = new InventoryPage(driver)
+        InventoryPage inventoryP = new InventoryPage(driver);
 
         loginP.open();
         loginP.login("standard_user","secret_sauce");
@@ -48,11 +49,9 @@ public class SeleniumDemoTest {
 
         assertTrue(driver.getCurrentUrl().toLowerCase().contains("inventory"));
         assertTrue(inventoryP.isProductListDisplayed());
-        assertEquals(6, inventoryP.webProducts());
+        assertEquals(6, inventoryP.getProducts().size());
         assertEquals("Sauce Labs Backpack",inventoryP.getFirstProductName());
         assertEquals("$29.99",inventoryP.getFirstProductPrice());
-
-
     }
 
     @ParameterizedTest
@@ -64,12 +63,16 @@ public class SeleniumDemoTest {
     public void wrongLogin(String username, String password){
 
         LoginPage loginP = new LoginPage(driver);
+        WrongLogin wrongLogin = new WrongLogin(driver);
 
-        WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(1)).until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h3[data-test='error']")));
-        
-        //assertTrue(errorMessage.getText().toLowerCase().contains("username and password"));
-        String errorText = errorMessage.getText().toLowerCase();
+        loginP.open();
+        loginP.login(username, password);
 
+        new WebDriverWait(driver, Duration.ofSeconds(1)).until(d -> wrongLogin.isErrorDisplayed());
+
+        String errorText = wrongLogin.getErrorMessage().toLowerCase();
+
+        assertTrue(wrongLogin.isErrorDisplayed());
         assertTrue(errorText.contains("password")
                 || errorText.contains("username"));
 

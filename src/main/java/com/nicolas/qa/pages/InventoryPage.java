@@ -19,16 +19,18 @@ public class InventoryPage {
         this.driver = driver;
     }
 
-    public List<WebElement> webProducts(){
+    public List<WebElement> getProducts(){
         return driver.findElements(product);
     }
 
     public String getFirstProductName(){
-        return driver.findElements(name).get(0).getText();
+        List<WebElement> names = driver.findElements(name);
+        return names.isEmpty() ? null : names.get(0).getText();
     }
 
     public String getFirstProductPrice(){
-        return driver.findElements(price).get(0).getText();
+        List<WebElement> prices = driver.findElements(price);
+        return prices.isEmpty() ? null : prices.get(0).getText();
     }
 
     public boolean isProductListDisplayed(){
