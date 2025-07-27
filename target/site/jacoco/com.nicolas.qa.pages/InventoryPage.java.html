@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">qa-automation</a> &gt; <a href="index.source.html" class="el_package">com.nicolas.qa.pages</a> &gt; <span class="el_source">InventoryPage.java</span></div><h1>InventoryPage.java</h1><pre class="source lang-java linenums">package com.nicolas.qa.pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class InventoryPage {
+
+    private WebDriver driver;
+
+<span class="fc" id="L13">    private By productList = By.id(&quot;inventory_container&quot;);</span>
+<span class="fc" id="L14">    private By name = By.className(&quot;inventory_item_name&quot;);</span>
+<span class="fc" id="L15">    private By price = By.className(&quot;inventory_item_price&quot;);</span>
+<span class="fc" id="L16">    private By product = By.className(&quot;inventory_item&quot;);</span>
+    
+<span class="fc" id="L18">    public InventoryPage(WebDriver driver){</span>
+<span class="fc" id="L19">        this.driver = driver;</span>
+<span class="fc" id="L20">    }</span>
+
+    public List&lt;WebElement&gt; getProducts(){
+<span class="fc" id="L23">        return driver.findElements(product);</span>
+    }
+
+    public String getFirstProductName(){
+<span class="fc" id="L27">        List&lt;WebElement&gt; names = driver.findElements(name);</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        return names.isEmpty() ? null : names.get(0).getText();</span>
+    }
+
+    public String getFirstProductPrice(){
+<span class="fc" id="L32">        List&lt;WebElement&gt; prices = driver.findElements(price);</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        return prices.isEmpty() ? null : prices.get(0).getText();</span>
+    }
+
+    public boolean isProductListDisplayed(){
+<span class="fc" id="L37">        return driver.findElement(productList).isDisplayed();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

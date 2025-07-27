@@ -1,6 +1,7 @@
 package com.nicolas.qa.tests;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +18,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,6 +28,7 @@ import com.nicolas.qa.pages.LoginPage;
 import com.nicolas.qa.pages.WrongLogin;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.mockito.Mockito;
 
 public class SeleniumDemoTest {
 
@@ -52,6 +55,27 @@ public class SeleniumDemoTest {
         assertEquals(6, inventoryP.getProducts().size());
         assertEquals("Sauce Labs Backpack",inventoryP.getFirstProductName());
         assertEquals("$29.99",inventoryP.getFirstProductPrice());
+    }
+
+    @Test
+    public void getFirstProductNameNoProduct(){
+        WebDriver driver = Mockito.mock(WebDriver.class);
+        Mockito.when(driver.findElements(By.className("inventory_item_name")))
+        .thenReturn(Collections.emptyList());
+
+        InventoryPage inventoryp = new InventoryPage(driver);
+        assertNull(inventoryp.getFirstProductName());
+    }
+
+    @Test
+    public void getFirstProductPriceNoProduct(){
+
+        WebDriver driver = Mockito.mock(WebDriver.class);
+        Mockito.when(driver.findElements(By.className("inventory_item_price")))
+        .thenReturn(Collections.emptyList());
+
+        InventoryPage inventoryP = new InventoryPage(driver);
+        assertNull(inventoryP.getFirstProductPrice());
     }
 
     @ParameterizedTest

@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+qa-automation,com.nicolas.qa,MainApp,64,0,0,0,15,0,2,0,2,0
+qa-automation,com.nicolas.qa,Calculator,10,38,2,2,2,10,2,8,0,8
+qa-automation,com.nicolas.qa.pages,LoginPage,0,78,0,0,0,15,0,3,0,3
+qa-automation,com.nicolas.qa.pages,InventoryPage,0,69,0,4,0,13,0,7,0,5
+qa-automation,com.nicolas.qa.pages,WrongLogin,0,24,0,0,0,6,0,3,0,3
