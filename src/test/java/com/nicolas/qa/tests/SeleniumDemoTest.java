@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -79,27 +80,40 @@ public class SeleniumDemoTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-        "usuario_invalido1, clave_invalida1",
-        "usuario_invalido2, clave_invalida2",
-        "usuario_invalido3, secret_sauce"
-    })
-    public void wrongLogin(String username, String password){
+    @ValueSource(strings = {"","invalid_user", "invalid_user2","invalid_user3"})
+    public void wrongUserLogin(String username){
 
         LoginPage loginP = new LoginPage(driver);
         WrongLogin wrongLogin = new WrongLogin(driver);
 
         loginP.open();
-        loginP.login(username, password);
+        loginP.login(username, "secret_sauce");
 
         new WebDriverWait(driver, Duration.ofSeconds(1)).until(d -> wrongLogin.isErrorDisplayed());
 
         String errorText = wrongLogin.getErrorMessage().toLowerCase();
 
         assertTrue(wrongLogin.isErrorDisplayed());
-        assertTrue(errorText.contains("password")
-                || errorText.contains("username"));
+        assertTrue(errorText.contains("username")
+                 ||errorText.contains("user"));
 
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"","123456789","sauce_secret","Secret_Sauce"})
+    public void wrongPasswordLogin(String password){
+        LoginPage loginP = new LoginPage(driver);
+        WrongLogin wrongL = new WrongLogin(driver);
+
+        loginP.open();
+        loginP.login("standard_user", password);
+
+        new WebDriverWait(driver, Duration.ofSeconds(1)).until(d -> wrongL.isErrorDisplayed());
+
+        String errorText = wrongL.getErrorMessage().toLowerCase();
+
+        assertTrue(wrongL.isErrorDisplayed());
+        assertTrue(errorText.contains("password"));
     }
 
     WebDriver driver;
