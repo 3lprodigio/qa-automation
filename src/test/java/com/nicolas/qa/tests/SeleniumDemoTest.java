@@ -1,4 +1,6 @@
 package com.nicolas.qa.tests;
+
+import com.nicolas.qa.userType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import static org.junit.Assert.assertNull;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
