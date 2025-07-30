@@ -1,8 +1,6 @@
 package com.nicolas.qa;
 
-import org.checkerframework.checker.units.qual.degrees;
-
-public enum userType {
+public enum UserType {
     
     STANDARD_USER("standard_user","secret_sauce"),
     LOCKED_OUT_USER("locked_out_user","secret_sauce"),
@@ -12,7 +10,7 @@ public enum userType {
     private String username;
     private String password;
 
-    userType(String username, String password){
+    UserType(String username, String password){
         this.username = username;
         this.password = password;
     }

@@ -1,6 +1,6 @@
 package com.nicolas.qa.tests;
 
-import com.nicolas.qa.userType;
+import com.nicolas.qa.UserType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import static org.junit.Assert.assertNull;
@@ -35,6 +35,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.mockito.Mockito;
 
 public class SeleniumDemoTest {
+
+    WebDriver driver;
 
     public WebDriver setupDriver(){
         System.setProperty("webdriver.edge.driver","C:\\WebDriver\\msedgedriver.exe");
@@ -119,7 +121,40 @@ public class SeleniumDemoTest {
         assertTrue(errorText.contains("password"));
     }
 
-    WebDriver driver;
+    @ParameterizedTest
+    @EnumSource(value = UserType.class, names = {"STANDARD_USER"})
+    public void succesfulLoginEnum(UserType userType){
+        LoginPage loginP = new LoginPage(driver);
+        InventoryPage inventoryP = new InventoryPage(driver);
+
+        loginP.open();
+        loginP.login(userType.getUsername(),userType.getPassword());
+
+        new WebDriverWait(driver,Duration.ofSeconds(1)).until(
+            ExpectedConditions.urlContains("inventory")
+        );
+
+        assertTrue(driver.getCurrentUrl().contains("inventory"));
+        assertTrue(inventoryP.isProductListDisplayed());
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = UserType.class, names = ("LOCKED_OUT_USER"))
+    public void failedLoginEnum(UserType userType){
+        LoginPage loginP = new LoginPage(driver);
+        WrongLogin wrongL = new WrongLogin(driver);
+        
+        loginP.open();
+        loginP.login(userType.getUsername(),userType.getPassword());
+
+        new WebDriverWait(driver,Duration.ofSeconds(1)).until(d -> wrongL.isErrorDisplayed());
+
+        String errorText = wrongL.getErrorMessage().toLowerCase();
+
+        assertTrue(wrongL.isErrorDisplayed());
+        assertTrue(errorText.contains("locked"));
+    }
+
     @BeforeEach
     void setup() {
         driver = setupDriver();
