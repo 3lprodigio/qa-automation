@@ -5,16 +5,21 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.Key;
+import java.util.stream.Stream;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -153,6 +158,55 @@ public class SeleniumDemoTest {
 
         assertTrue(wrongL.isErrorDisplayed());
         assertTrue(errorText.contains("locked"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "user@domain.com",
+        "user with spaces",
+        "user;DROP TABLE users;",
+        "用户名",
+        "very_long_username_that_exceeds_normal_limits_and_could_break_the_system"
+    })
+    public void specialCharactersLogin(String username){
+        LoginPage loginP = new LoginPage(driver);
+        WrongLogin wrongL = new WrongLogin(driver);
+
+        loginP.open();
+        loginP.login(username, "secret_sauce");
+
+        new WebDriverWait(driver, Duration.ofSeconds(1)).until(
+            d -> wrongL.isErrorDisplayed()
+        );
+
+        assertTrue(wrongL.isErrorDisplayed());
+    } 
+
+    @ParameterizedTest
+    @MethodSource("invalidLoginData")
+    public void invalidLoginCombinations(String username, String password, String expectedError){
+        LoginPage loginP = new LoginPage(driver);
+        WrongLogin wrongL = new WrongLogin(driver);
+
+        loginP.open();
+        loginP.login(username, password);
+
+        String errorText = wrongL.getErrorMessage().toLowerCase();
+
+        new WebDriverWait(driver, Duration.ofSeconds(1)).until(
+            d -> wrongL.isErrorDisplayed()
+        );
+
+        assertTrue(errorText.contains(expectedError.toLowerCase()));
+    }
+
+    static Stream<Arguments> invalidLoginData(){
+        return Stream.of(
+            Arguments.of("","","username"),
+            Arguments.of("validuser","","password"),
+            Arguments.of("","validpass","username"),
+            Arguments.of("    ","   ", "username")
+        );
     }
 
     @BeforeEach
